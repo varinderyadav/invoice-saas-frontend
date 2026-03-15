@@ -1,8 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+const routeLabels = {
+  "/dashboard": "Dashboard",
+  "/companies": "Companies",
+  "/clients": "Clients",
+  "/invoices": "Invoices",
+  "/settings": "Settings",
+};
 
 export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout, user, isAuthenticated } = useAuth();
 
   const handleLogout = () => {
@@ -34,6 +43,11 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
         >
           Invoice SaaS
         </Link>
+        {isAuthenticated ? (
+          <span className="ml-1 inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-medium text-slate-700 md:hidden">
+            {routeLabels[location.pathname] || "Workspace"}
+          </span>
+        ) : null}
       </div>
 
       <nav className="flex items-center gap-4">

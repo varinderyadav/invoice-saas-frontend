@@ -35,9 +35,19 @@ export default function Sidebar({ isOpen = false, onClose }) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-      <div className="mb-8 px-2">
+      <div className="mb-6 flex items-center justify-between px-2 md:mb-8">
+        <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Workspace</p>
         <h1 className="text-xl font-bold text-slate-900">Invoice SaaS</h1>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50 md:hidden"
+          aria-label="Close sidebar"
+        >
+          x
+        </button>
       </div>
 
       <nav className="space-y-1">
