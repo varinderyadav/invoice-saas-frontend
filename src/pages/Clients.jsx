@@ -28,6 +28,12 @@ function getClientPhone(client) {
   return client?.mobile_number || "-";
 }
 
+function getCompanyName(companyId, companies) {
+  if (!companyId) return "-";
+  const match = companies.find((company) => String(company.id) === String(companyId));
+  return match?.business_name || match?.name || companyId;
+}
+
 export default function Clients() {
   const [clients, setClients] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -220,7 +226,7 @@ export default function Clients() {
                   <td className="px-4 py-3 text-sm text-slate-700">{getClientPhone(client)}</td>
                   <td className="px-4 py-3 text-sm text-slate-700">{client?.gst_number || "-"}</td>
                   <td className="px-4 py-3 text-sm text-slate-700">
-                    {client?.company_name || client?.company || "-"}
+                    {client?.company_name || getCompanyName(client?.company, companies)}
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-700">
                     {[client?.city, client?.state].filter(Boolean).join(", ") || "-"}
