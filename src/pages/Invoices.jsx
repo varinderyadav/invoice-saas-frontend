@@ -82,15 +82,23 @@ function getItemDescription(item) {
   return item?.description || "";
 }
 
-function getClientMobileNumber(invoice) {
-  return (
+function getClientMobileNumber(invoice, clientList) {
+  const direct =
     invoice?.client?.mobile_number ||
     invoice?.client_mobile_number ||
     invoice?.client_phone ||
     invoice?.client?.phone ||
-    invoice?.client?.phone_number ||
-    ""
-  );
+    invoice?.client?.phone_number;
+
+  if (direct) {
+    return direct;
+  }
+
+  const clientId = invoice?.client?.id || invoice?.client;
+  if (!clientId) return "";
+
+  const match = clientList.find((client) => String(client.id) === String(clientId));
+  return match?.mobile_number || match?.phone || match?.phone_number || "";
 }
 
 function normalizePhoneNumber(value) {
@@ -361,7 +369,7 @@ export default function Invoices() {
   };
 
   const handleSendWhatsApp = () => {
-    const rawPhone = getClientMobileNumber(selectedInvoice);
+    const rawPhone = getClientMobileNumber(selectedInvoice, clients);
     const phone = normalizePhoneNumber(rawPhone);
     if (!phone) {
       setError("Client mobile number is missing. Add a mobile number to send WhatsApp.");
