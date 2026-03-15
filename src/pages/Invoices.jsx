@@ -82,6 +82,21 @@ function getItemDescription(item) {
   return item?.description || "";
 }
 
+function getClientMobileNumber(invoice) {
+  return (
+    invoice?.client?.mobile_number ||
+    invoice?.client_mobile_number ||
+    invoice?.client_phone ||
+    invoice?.client?.phone ||
+    invoice?.client?.phone_number ||
+    ""
+  );
+}
+
+function normalizePhoneNumber(value) {
+  return (value || "").replace(/[^\d]/g, "");
+}
+
 async function getClients() {
   const response = await api.get("clients/");
   return response.data;
@@ -343,6 +358,32 @@ export default function Invoices() {
     } finally {
       setSendingEmail(false);
     }
+  };
+
+  const handleSendWhatsApp = () => {
+    const rawPhone = getClientMobileNumber(selectedInvoice);
+    const phone = normalizePhoneNumber(rawPhone);
+    if (!phone) {
+      setError("Client mobile number is missing. Add a mobile number to send WhatsApp.");
+      return;
+    }
+
+    const invoiceNumber = selectedInvoice?.invoice_no || selectedInvoice?.id || selectedInvoiceId;
+    const totalAmount = formatCurrency(invoiceTotals.total);
+    const invoiceLink = `${window.location.origin}/invoice/${invoiceNumber}`;
+
+    const message = `Hello,
+
+Your invoice is ready.
+
+Invoice Number: ${invoiceNumber}
+Total Amount: ${totalAmount}
+
+View Invoice:
+${invoiceLink}`;
+
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 
   const invoiceTotals = useMemo(() => {
@@ -679,6 +720,18 @@ export default function Invoices() {
                   className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-60"
                 >
                   {sendingEmail ? "Sending..." : "Send Invoice"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSendWhatsApp}
+                  className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 11.5a8.5 8.5 0 0 1-12.57 7.38L3 20l1.12-3.28A8.5 8.5 0 1 1 21 11.5Z" />
+                    </svg>
+                    Send WhatsApp
+                  </span>
                 </button>
                 <button
                   type="button"
