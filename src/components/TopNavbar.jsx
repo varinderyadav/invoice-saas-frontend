@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function TopNavbar() {
+export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
   const navigate = useNavigate();
   const { logout, user, isAuthenticated } = useAuth();
 
@@ -11,13 +11,30 @@ export default function TopNavbar() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6">
-      <Link
-        to={isAuthenticated ? "/dashboard" : "/login"}
-        className="text-base font-semibold text-slate-900 hover:text-slate-700"
-      >
-        Invoice SaaS
-      </Link>
+    <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
+      <div className="flex items-center gap-3">
+        {isAuthenticated && showMenuButton ? (
+          <button
+            type="button"
+            onClick={onMenuClick}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:bg-slate-50 md:hidden"
+            aria-label="Open sidebar"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 6h18" />
+              <path d="M3 12h18" />
+              <path d="M3 18h18" />
+            </svg>
+          </button>
+        ) : null}
+
+        <Link
+          to={isAuthenticated ? "/dashboard" : "/login"}
+          className="text-base font-semibold text-slate-900 hover:text-slate-700"
+        >
+          Invoice SaaS
+        </Link>
+      </div>
 
       <nav className="flex items-center gap-4">
         {isAuthenticated ? (

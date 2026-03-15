@@ -7,6 +7,7 @@ import Dashboard from "../pages/Dashboard";
 import Companies from "../pages/Companies";
 import Invoices from "../pages/Invoices";
 import Clients from "../pages/Clients";
+import PublicLayout from "../layouts/PublicLayout";
 import { useAuth } from "../context/AuthContext";
 
 export default function AppRouter() {
@@ -14,14 +15,16 @@ export default function AppRouter() {
 
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
-      />
-      <Route
-        path="/register"
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />}
-      />
+      <Route element={<PublicLayout />}>
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />}
+        />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>

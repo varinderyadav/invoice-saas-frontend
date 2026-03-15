@@ -192,7 +192,7 @@ export default function Clients() {
       {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
       {successMessage ? <p className="mt-4 text-sm text-emerald-600">{successMessage}</p> : null}
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table className="min-w-full divide-y divide-slate-200 text-left">
           <thead className="bg-slate-50">
             <tr>
