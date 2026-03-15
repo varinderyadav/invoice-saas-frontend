@@ -82,7 +82,7 @@ function getItemDescription(item) {
   return item?.description || "";
 }
 
-function getClientMobileNumber(invoice, clientList) {
+function getClientMobileNumber(invoice, clientList, invoiceList) {
   const direct =
     invoice?.client?.mobile_number ||
     invoice?.client_mobile_number ||
@@ -94,7 +94,15 @@ function getClientMobileNumber(invoice, clientList) {
     return direct;
   }
 
-  const clientId = invoice?.client?.id || invoice?.client;
+  let clientId = invoice?.client?.id || invoice?.client || invoice?.client_id;
+  if (!clientId && invoiceList?.length) {
+    const matchInvoice = invoiceList.find((item) => String(item.id) === String(invoice?.id));
+    clientId =
+      matchInvoice?.client?.id ||
+      matchInvoice?.client ||
+      matchInvoice?.client_id ||
+      matchInvoice?.clientId;
+  }
   if (!clientId) return "";
 
   const match = clientList.find((client) => String(client.id) === String(clientId));
@@ -369,7 +377,7 @@ export default function Invoices() {
   };
 
   const handleSendWhatsApp = () => {
-    const rawPhone = getClientMobileNumber(selectedInvoice, clients);
+    const rawPhone = getClientMobileNumber(selectedInvoice, clients, invoices);
     const phone = normalizePhoneNumber(rawPhone);
     if (!phone) {
       setError("Client mobile number is missing. Add a mobile number to send WhatsApp.");
