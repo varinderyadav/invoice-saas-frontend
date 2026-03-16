@@ -67,6 +67,10 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
               </span>
             ) : null}
 
+            <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-400 lg:inline">
+              Developed by Varinder Yadav
+            </span>
+
             <button
               type="button"
               onClick={handleLogout}
@@ -77,6 +81,9 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </>
         ) : (
           <>
+            <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-400 lg:inline">
+              Developed by Varinder Yadav
+            </span>
             <Link
               to="/login"
               className="btn btn-outline"
