@@ -109,6 +109,25 @@ function getClientMobileNumber(invoice, clientList, invoiceList) {
   return match?.mobile_number || match?.phone || match?.phone_number || "";
 }
 
+function getClientEmail(invoice, clientList, invoiceList) {
+  const direct = invoice?.client?.email || invoice?.client_email;
+  if (direct) return direct;
+
+  let clientId = invoice?.client?.id || invoice?.client || invoice?.client_id;
+  if (!clientId && invoiceList?.length) {
+    const matchInvoice = invoiceList.find((item) => String(item.id) === String(invoice?.id));
+    clientId =
+      matchInvoice?.client?.id ||
+      matchInvoice?.client ||
+      matchInvoice?.client_id ||
+      matchInvoice?.clientId;
+  }
+  if (!clientId) return "";
+
+  const match = clientList.find((client) => String(client.id) === String(clientId));
+  return match?.email || "";
+}
+
 function normalizePhoneNumber(value) {
   return (value || "").replace(/[^\d]/g, "");
 }
@@ -364,6 +383,11 @@ export default function Invoices() {
     if (!selectedInvoiceId) return;
 
     try {
+      const clientEmail = getClientEmail(selectedInvoice, clients, invoices);
+      if (!clientEmail) {
+        setError("Client email is missing. Add an email to send the invoice.");
+        return;
+      }
       setSendingEmail(true);
       setError("");
       setSuccessMessage("");
