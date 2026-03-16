@@ -14,3 +14,8 @@ export async function deleteCompany(id) {
   const response = await api.delete(`companies/${id}/`);
   return response.data;
 }
+
+export async function updateCompany(id, data) {
+  const response = await api.patch(`companies/${id}/`, data);
+  return response.data;
+}

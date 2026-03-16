@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createCompany, deleteCompany, getCompanies } from "../api/companyService";
+import { createCompany, deleteCompany, getCompanies, updateCompany } from "../api/companyService";
 
 function normalizeList(payload) {
   if (Array.isArray(payload)) {
@@ -14,6 +14,7 @@ function normalizeList(payload) {
 export default function Companies() {
   const [companies, setCompanies] = useState([]);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [editingCompany, setEditingCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -57,8 +58,13 @@ export default function Companies() {
     };
 
     try {
-      await createCompany(payload);
+      if (editingCompany) {
+        await updateCompany(editingCompany.id, payload);
+      } else {
+        await createCompany(payload);
+      }
       setFormData({ name: "", email: "", phone: "" });
+      setEditingCompany(null);
       await loadCompanies();
     } catch (err) {
       const message =
@@ -79,6 +85,20 @@ export default function Companies() {
     } catch (err) {
       setError(err?.response?.data?.detail || "Failed to delete company.");
     }
+  };
+
+  const handleEdit = (company) => {
+    setEditingCompany(company);
+    setFormData({
+      name: company.business_name || "",
+      email: company.email || "",
+      phone: company.mobile_number || "",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCompany(null);
+    setFormData({ name: "", email: "", phone: "" });
   };
 
   return (
@@ -122,8 +142,17 @@ export default function Companies() {
           disabled={submitting}
           className="btn btn-primary disabled:opacity-60"
         >
-          {submitting ? "Adding..." : "Add Company"}
+          {submitting ? "Saving..." : editingCompany ? "Update Company" : "Add Company"}
         </button>
+        {editingCompany ? (
+          <button
+            type="button"
+            onClick={handleCancelEdit}
+            className="btn btn-outline"
+          >
+            Cancel
+          </button>
+        ) : null}
       </form>
 
       {error ? <p className="mt-3 text-sm text-rose-600">{error}</p> : null}
@@ -158,13 +187,22 @@ export default function Companies() {
                   <td className="px-4 py-3 text-sm text-slate-600">{company.email || "-"}</td>
                   <td className="px-4 py-3 text-sm text-slate-600">{company.mobile_number || "-"}</td>
                   <td className="px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(company.id)}
-                      className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(company)}
+                        className="rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(company.id)}
+                        className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
