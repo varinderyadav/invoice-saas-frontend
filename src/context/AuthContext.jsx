@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { login as loginRequest } from "../api/authService";
+import { onAuthClear } from "./authEvents";
 
 const AuthContext = createContext(null);
 
@@ -21,10 +22,13 @@ function parseJwt(token) {
 }
 
 export function AuthProvider({ children }) {
-  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
-  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
+  const readAccessToken = () => localStorage.getItem("accessToken");
+  const readRefreshToken = () => localStorage.getItem("refreshToken");
+
+  const [accessToken, setAccessToken] = useState(readAccessToken());
+  const [refreshToken, setRefreshToken] = useState(readRefreshToken());
   const [user, setUser] = useState(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = readAccessToken();
     const payload = token && parseJwt(token);
     return payload ? { username: payload.username } : null;
   });
@@ -68,6 +72,46 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const clearInvalidAuth = () => {
+    logout();
+  };
+
+  useEffect(() => {
+    const syncAuthState = () => {
+      const access = readAccessToken();
+      const refresh = readRefreshToken();
+      if (!access) {
+        setAccessToken(null);
+        setRefreshToken(null);
+        setUser(null);
+        return;
+      }
+      setAccessToken(access);
+      setRefreshToken(refresh);
+      const payload = parseJwt(access);
+      if (payload) {
+        setUser({ username: payload.username });
+      }
+    };
+
+    syncAuthState();
+    const handleStorage = (event) => {
+      if (event.key === "accessToken" || event.key === "refreshToken" || event.key === "access") {
+        syncAuthState();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    const unsubscribe = onAuthClear(() => {
+      setAccessToken(null);
+      setRefreshToken(null);
+      setUser(null);
+    });
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      unsubscribe();
+    };
+  }, []);
+
   const value = useMemo(
     () => ({
       accessToken,
@@ -76,6 +120,7 @@ export function AuthProvider({ children }) {
       isAuthenticated,
       login,
       logout,
+      clearInvalidAuth,
     }),
     [accessToken, refreshToken, user, isAuthenticated]
   );

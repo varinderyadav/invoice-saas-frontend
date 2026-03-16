@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearAuth } from "../context/authEvents";
 
 const baseRoot = import.meta.env.VITE_API_BASE_URL || "https://invoice-saas-api.onrender.com";
 const BASE_URL = `${baseRoot.replace(/\/$/, "")}/api/`;
@@ -83,9 +84,7 @@ api.interceptors.response.use(
 
     if (isTokenInvalid(error)) {
       clearTokens();
-      if (typeof window !== "undefined") {
-        window.location.assign("/login");
-      }
+      clearAuth();
       return Promise.reject(error);
     }
 
@@ -131,9 +130,7 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError, null);
       clearTokens();
-      if (typeof window !== "undefined") {
-        window.location.assign("/login");
-      }
+      clearAuth();
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
