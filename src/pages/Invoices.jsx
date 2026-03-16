@@ -41,7 +41,7 @@ function formatAmount(invoice) {
 
 function formatError(error) {
   const detail = error?.response?.data;
-  if (!detail) return "Something went wrong. Please try again.";
+  if (!detail) return error?.message || "Something went wrong. Please try again.";
   if (typeof detail === "string") return detail;
   if (detail.detail) return detail.detail;
 
