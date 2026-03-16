@@ -44,6 +44,9 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
           <span>Invoice SaaS</span>
         </Link>
+        <span className="hidden sm:inline text-sm font-semibold text-emerald-600">
+          Developed by Varinder Yadav
+        </span>
         {isAuthenticated ? (
           <span className="ml-1 inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-semibold text-slate-700 md:hidden">
             {routeLabels[location.pathname] || "Workspace"}
@@ -67,10 +70,6 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
               </span>
             ) : null}
 
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Developed by Varinder Yadav
-            </span>
-
             <button
               type="button"
               onClick={handleLogout}
@@ -81,9 +80,6 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </>
         ) : (
           <>
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Developed by Varinder Yadav
-            </span>
             <Link
               to="/login"
               className="btn btn-outline"
