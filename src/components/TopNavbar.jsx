@@ -67,7 +67,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
               </span>
             ) : null}
 
-            <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-400 lg:inline">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
               Developed by Varinder Yadav
             </span>
 
@@ -81,7 +81,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </>
         ) : (
           <>
-            <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-400 lg:inline">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
               Developed by Varinder Yadav
             </span>
             <Link
