@@ -88,7 +88,7 @@ export default function Companies() {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-4"
+        className="mt-6 grid grid-cols-1 gap-4 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm md:grid-cols-4"
       >
         <input
           name="name"
@@ -120,7 +120,7 @@ export default function Companies() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60"
+          className="btn btn-primary disabled:opacity-60"
         >
           {submitting ? "Adding..." : "Add Company"}
         </button>
@@ -128,7 +128,7 @@ export default function Companies() {
 
       {error ? <p className="mt-3 text-sm text-rose-600">{error}</p> : null}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200">
+      <div className="mt-6 table-wrap">
         <table className="min-w-full divide-y divide-slate-200 bg-white text-left">
           <thead className="bg-slate-50">
             <tr>

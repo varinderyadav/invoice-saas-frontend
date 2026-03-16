@@ -17,15 +17,15 @@ function StatCard({ title, value, icon, tone, to }) {
   return (
     <Link
       to={to}
-      className="block transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+      className="block transition-transform focus:outline-none focus:ring-2 focus:ring-slate-300"
     >
-      <article className="cursor-pointer rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow">
+      <article className="app-card cursor-pointer p-5 transition-all hover:-translate-y-1 hover:shadow-xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-slate-500">{title}</p>
             <p className="mt-3 text-3xl font-semibold text-slate-900">{value}</p>
           </div>
-          <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${tone}`}>
+          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone}`}>
             {icon}
           </div>
         </div>

@@ -33,9 +33,14 @@ export default function Login() {
   };
 
   return (
-    <div className="mx-auto mt-20 max-w-md rounded-lg bg-white p-6 shadow">
-      <h1 className="text-2xl font-semibold">Login</h1>
-      <p className="mt-2 text-sm text-slate-600">Sign in to continue.</p>
+    <div className="mx-auto mt-12 max-w-md app-card p-6">
+      <div className="flex items-center gap-3">
+        <img src="/logo.svg" alt="Invoice SaaS" className="h-10 w-10" />
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">Welcome back</h1>
+          <p className="mt-1 text-sm text-slate-600">Sign in to continue.</p>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
@@ -49,7 +54,7 @@ export default function Login() {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter your email"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-slate-400 focus:outline-none"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 focus:border-slate-400 focus:outline-none"
             required
           />
         </div>
@@ -64,7 +69,7 @@ export default function Login() {
             type="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-slate-400 focus:outline-none"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 focus:border-slate-400 focus:outline-none"
             required
           />
         </div>
@@ -74,7 +79,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-slate-900 px-4 py-2 text-white disabled:opacity-60"
+          className="btn btn-primary w-full disabled:opacity-60"
         >
           {loading ? "Signing in..." : "Login"}
         </button>
@@ -83,7 +88,7 @@ export default function Login() {
           <p>Don&apos;t have an account?</p>
           <Link
             to="/register"
-            className="inline-flex w-full items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 font-medium text-slate-900 transition hover:border-slate-400 hover:bg-slate-50"
+            className="btn btn-outline w-full"
           >
             Create an account
           </Link>

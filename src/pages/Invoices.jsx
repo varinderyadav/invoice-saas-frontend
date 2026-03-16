@@ -479,7 +479,7 @@ ${invoiceLink}`;
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+          className="btn btn-primary"
         >
           Create Invoice
         </button>
@@ -503,7 +503,7 @@ ${invoiceLink}`;
         </div>
       ) : null}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="mt-6 table-wrap">
         <table className="min-w-full divide-y divide-slate-200 text-left">
           <thead className="bg-slate-50">
             <tr>
@@ -570,7 +570,7 @@ ${invoiceLink}`;
 
       {isModalOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">Create Invoice</h2>
               <button
@@ -683,7 +683,7 @@ ${invoiceLink}`;
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60"
+                  className="btn btn-primary disabled:opacity-60"
                 >
                   {submitting ? "Creating..." : "Create Invoice"}
                 </button>
@@ -695,7 +695,7 @@ ${invoiceLink}`;
 
       {isDetailsOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-5xl overflow-auto rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+          <div className="max-h-[90vh] w-full max-w-5xl overflow-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">Invoice Details</h2>
@@ -757,14 +757,14 @@ ${invoiceLink}`;
                   type="button"
                   onClick={handleSendInvoiceEmail}
                   disabled={sendingEmail}
-                  className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-60"
+                  className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-60"
                 >
                   {sendingEmail ? "Sending..." : "Send Invoice"}
                 </button>
                 <button
                   type="button"
                   onClick={handleSendWhatsApp}
-                  className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50"
+                  className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
                 >
                   <span className="inline-flex items-center gap-2">
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -791,7 +791,7 @@ ${invoiceLink}`;
               </div>
             </div>
 
-            <div className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+            <div className="mt-3 table-wrap">
               <table className="min-w-full divide-y divide-slate-200 text-left">
                 <thead className="bg-slate-50">
                   <tr>

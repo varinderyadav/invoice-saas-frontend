@@ -31,19 +31,22 @@ export default function Sidebar({ isOpen = false, onClose }) {
         aria-hidden="true"
       />
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200 bg-white px-4 py-6 transition-transform duration-200 md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200 bg-white/95 px-4 py-6 backdrop-blur transition-transform duration-200 md:static md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
       <div className="mb-6 flex items-center justify-between px-2 md:mb-8">
-        <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Workspace</p>
-        <h1 className="text-xl font-bold text-slate-900">Invoice SaaS</h1>
+        <div className="flex items-center gap-3">
+          <img src="/logo.svg" alt="Invoice SaaS" className="h-9 w-9" />
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Workspace</p>
+            <h1 className="text-lg font-bold text-slate-900">Invoice SaaS</h1>
+          </div>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50 md:hidden"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 md:hidden"
           aria-label="Close sidebar"
         >
           x
@@ -58,10 +61,10 @@ export default function Sidebar({ isOpen = false, onClose }) {
             onClick={onClose}
             className={({ isActive }) =>
               [
-                "block rounded-lg px-3 py-2 text-sm font-medium transition",
+                "nav-item",
                 isActive
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                  ? "nav-item-active"
+                  : "nav-item-default",
               ].join(" ")
             }
           >
@@ -73,7 +76,7 @@ export default function Sidebar({ isOpen = false, onClose }) {
       <button
         type="button"
         onClick={handleLogout}
-        className="mt-auto rounded-lg px-3 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+        className="mt-auto rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-100"
       >
         Logout
       </button>

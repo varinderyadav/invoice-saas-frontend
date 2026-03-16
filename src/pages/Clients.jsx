@@ -183,7 +183,7 @@ export default function Clients() {
         <button
           type="button"
           onClick={openCreateModal}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+          className="btn btn-primary"
         >
           Add Client
         </button>
@@ -192,7 +192,7 @@ export default function Clients() {
       {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
       {successMessage ? <p className="mt-4 text-sm text-emerald-600">{successMessage}</p> : null}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="mt-6 table-wrap">
         <table className="min-w-full divide-y divide-slate-200 text-left">
           <thead className="bg-slate-50">
             <tr>
@@ -259,7 +259,7 @@ export default function Clients() {
 
       {isModalOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
                 {editingClient ? "Edit Client" : "Add Client"}
@@ -426,7 +426,7 @@ export default function Clients() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60"
+                  className="btn btn-primary disabled:opacity-60"
                 >
                   {submitting ? "Saving..." : editingClient ? "Update Client" : "Create Client"}
                 </button>

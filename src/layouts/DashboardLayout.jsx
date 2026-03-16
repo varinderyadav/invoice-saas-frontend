@@ -21,7 +21,7 @@ export default function DashboardLayout() {
   }, [isSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="app-shell">
       <TopNavbar showMenuButton onMenuClick={openSidebar} />
 
       <div className="mx-auto flex min-h-screen max-w-[1440px]">
@@ -29,7 +29,7 @@ export default function DashboardLayout() {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <main className="flex-1 p-6">
-            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <section className="app-card p-6">
               <Outlet />
             </section>
           </main>
