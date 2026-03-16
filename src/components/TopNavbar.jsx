@@ -20,8 +20,9 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
   };
 
   return (
-    <header className="app-surface sticky top-0 z-20 flex h-16 items-center justify-between px-4 sm:px-6">
-      <div className="flex items-center gap-3">
+    <header className="app-surface sticky top-0 z-20">
+      <div className="flex min-h-[64px] items-center justify-between gap-3 px-4 py-2 sm:h-16 sm:py-0 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
         {isAuthenticated && showMenuButton ? (
           <button
             type="button"
@@ -37,29 +38,31 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </button>
         ) : null}
 
-        <Link
-          to={isAuthenticated ? "/dashboard" : "/login"}
-          className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700"
-        >
-          <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
-          <span>Invoice SaaS</span>
-        </Link>
-        <span className="hidden sm:inline text-sm font-semibold text-emerald-600">
-          Developed by Varinder Yadav
-        </span>
-        {isAuthenticated ? (
-          <span className="ml-1 inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-semibold text-slate-700 md:hidden">
-            {routeLabels[location.pathname] || "Workspace"}
-          </span>
-        ) : null}
-      </div>
+          <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
+            <Link
+              to={isAuthenticated ? "/dashboard" : "/login"}
+              className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700"
+            >
+              <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
+              <span>Invoice SaaS</span>
+            </Link>
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+              Developed by Varinder Yadav
+            </span>
+            {isAuthenticated ? (
+              <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 md:hidden">
+                {routeLabels[location.pathname] || "Workspace"}
+              </span>
+            ) : null}
+          </div>
+        </div>
 
-      <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-3 sm:gap-4">
         {isAuthenticated ? (
           <>
             <Link
               to="/dashboard"
-              className="text-sm font-semibold text-slate-700 transition hover:text-slate-900"
+              className="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 sm:inline"
             >
               Dashboard
             </Link>
@@ -94,7 +97,8 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
             </Link>
           </>
         )}
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }

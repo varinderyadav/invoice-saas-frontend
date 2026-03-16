@@ -54,6 +54,15 @@ const requestTokenRefresh = async () => {
   }
 };
 
+const isTokenInvalid = (error) => {
+  const detail = error?.response?.data?.detail || "";
+  const code = error?.response?.data?.code || "";
+  return (
+    String(code).toLowerCase() === "token_not_valid" ||
+    String(detail).toLowerCase().includes("token not valid")
+  );
+};
+
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) {
@@ -69,6 +78,14 @@ api.interceptors.response.use(
     const status = error?.response?.status;
 
     if (!originalRequest || status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    if (isTokenInvalid(error)) {
+      clearTokens();
+      if (typeof window !== "undefined") {
+        window.location.assign("/login");
+      }
       return Promise.reject(error);
     }
 
@@ -114,6 +131,9 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError, null);
       clearTokens();
+      if (typeof window !== "undefined") {
+        window.location.assign("/login");
+      }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
