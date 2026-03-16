@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCompanies } from "../api/companyService";
 import { getInvoices } from "../api/invoiceService";
+import { getClients } from "../api/clientService";
 
 function normalizeList(payload) {
   if (Array.isArray(payload)) {
@@ -36,6 +37,7 @@ function StatCard({ title, value, icon, tone, to }) {
 
 export default function Dashboard() {
   const [companies, setCompanies] = useState([]);
+  const [clients, setClients] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -52,10 +54,15 @@ export default function Dashboard() {
           setError("");
         }
 
-        const [companiesRes, invoicesRes] = await Promise.all([getCompanies(), getInvoices()]);
+        const [companiesRes, invoicesRes, clientsRes] = await Promise.all([
+          getCompanies(),
+          getInvoices(),
+          getClients(),
+        ]);
         if (isMounted) {
           setCompanies(normalizeList(companiesRes));
           setInvoices(normalizeList(invoicesRes));
+          setClients(normalizeList(clientsRes));
         }
       } catch (err) {
         if (isMounted) {
@@ -84,10 +91,11 @@ export default function Dashboard() {
     return {
       totalCompanies: companies.length,
       totalInvoices: invoices.length,
+      totalClients: clients.length,
       paidInvoices: paidCount,
       pendingInvoices: pendingCount,
     };
-  }, [companies, invoices]);
+  }, [companies, invoices, clients]);
 
   if (loading) {
     return <p className="text-sm text-slate-600">Loading dashboard statistics...</p>;
@@ -127,6 +135,20 @@ export default function Dashboard() {
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M7 3h7l5 5v13H7z" />
               <path d="M14 3v6h6" />
+            </svg>
+          }
+        />
+
+        <StatCard
+          title="Total Clients"
+          value={stats.totalClients ?? 0}
+          tone="bg-sky-50 text-sky-600"
+          to="/clients"
+          icon={
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M16 11a4 4 0 1 0-8 0" />
+              <circle cx="12" cy="7" r="4" />
+              <path d="M4 21c0-3.314 3.582-6 8-6s8 2.686 8 6" />
             </svg>
           }
         />
