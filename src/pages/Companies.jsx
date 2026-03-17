@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createCompany, deleteCompany, getCompanies, updateCompany } from "../api/companyService";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function normalizeList(payload) {
   if (Array.isArray(payload)) {
@@ -18,6 +19,8 @@ export default function Companies() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const loadCompanies = async () => {
     try {
@@ -79,12 +82,6 @@ export default function Companies() {
   };
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this data?\n\nAfter deleting this company, its invoices and clients will also be deleted."
-    );
-    if (!confirmed) {
-      return;
-    }
     try {
       await deleteCompany(id);
       setCompanies((prev) => prev.filter((company) => company.id !== id));
@@ -105,6 +102,22 @@ export default function Companies() {
   const handleCancelEdit = () => {
     setEditingCompany(null);
     setFormData({ name: "", email: "", phone: "" });
+  };
+
+  const openDeleteDialog = (id) => {
+    setPendingDeleteId(id);
+    setConfirmOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setConfirmOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    await handleDelete(pendingDeleteId);
+    closeDeleteDialog();
   };
 
   return (
@@ -203,11 +216,11 @@ export default function Companies() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(company.id)}
-                        className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
-                      >
-                        Delete
-                      </button>
+                      onClick={() => openDeleteDialog(company.id)}
+                      className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
+                    >
+                      Delete
+                    </button>
                     </div>
                   </td>
                 </tr>
@@ -216,6 +229,18 @@ export default function Companies() {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Delete company?"
+        message={
+          "Are you sure you want to delete this data?\n\nAfter deleting this company, its invoices and clients will also be deleted."
+        }
+        confirmLabel="Delete"
+        confirmTone="danger"
+        onConfirm={confirmDelete}
+        onCancel={closeDeleteDialog}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   getInvoiceById,
   getInvoices,
 } from "../api/invoiceService";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function normalizeList(payload) {
   if (Array.isArray(payload)) {
@@ -159,6 +160,8 @@ export default function Invoices() {
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const [formData, setFormData] = useState({
     client: "",
@@ -291,10 +294,6 @@ export default function Invoices() {
   };
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this data?");
-    if (!confirmed) {
-      return;
-    }
     try {
       setDeletingId(id);
       setError("");
@@ -309,6 +308,22 @@ export default function Invoices() {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const openDeleteDialog = (id) => {
+    setPendingDeleteId(id);
+    setConfirmOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setConfirmOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    await handleDelete(pendingDeleteId);
+    closeDeleteDialog();
   };
 
   const handleOpenDetails = async (invoice) => {
@@ -557,7 +572,7 @@ ${invoiceLink}`;
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(invoice.id)}
+                        onClick={() => openDeleteDialog(invoice.id)}
                         disabled={deletingId === invoice.id}
                         className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100 disabled:opacity-60"
                       >
@@ -971,6 +986,16 @@ ${invoiceLink}`;
           </div>
         </div>
       ) : null}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Delete invoice?"
+        message="Are you sure you want to delete this data?"
+        confirmLabel="Delete"
+        confirmTone="danger"
+        onConfirm={confirmDelete}
+        onCancel={closeDeleteDialog}
+      />
     </div>
   );
 }

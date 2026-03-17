@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getCompanies } from "../api/companyService";
 import { createClient, deleteClient, getClients, updateClient } from "../api/clientService";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function normalizeList(payload) {
   if (Array.isArray(payload)) return payload;
@@ -44,6 +45,8 @@ export default function Clients() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const [formData, setFormData] = useState({
     business_name: "",
@@ -161,12 +164,6 @@ export default function Clients() {
   };
 
   const handleDelete = async (clientId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this data?\n\nInvoices related to this client will also be deleted."
-    );
-    if (!confirmed) {
-      return;
-    }
     try {
       setDeletingId(clientId);
       setError("");
@@ -177,6 +174,22 @@ export default function Clients() {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const openDeleteDialog = (clientId) => {
+    setPendingDeleteId(clientId);
+    setConfirmOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setConfirmOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    await handleDelete(pendingDeleteId);
+    closeDeleteDialog();
   };
 
   return (
@@ -248,7 +261,7 @@ export default function Clients() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(client.id)}
+                        onClick={() => openDeleteDialog(client.id)}
                         disabled={deletingId === client.id}
                         className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100 disabled:opacity-60"
                       >
@@ -441,6 +454,18 @@ export default function Clients() {
           </div>
         </div>
       ) : null}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Delete client?"
+        message={
+          "Are you sure you want to delete this data?\n\nInvoices related to this client will also be deleted."
+        }
+        confirmLabel="Delete"
+        confirmTone="danger"
+        onConfirm={confirmDelete}
+        onCancel={closeDeleteDialog}
+      />
     </div>
   );
 }
