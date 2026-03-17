@@ -41,6 +41,9 @@ function formatAmount(invoice) {
 }
 
 function formatError(error) {
+  if (error?.message === "Network Error") {
+    return "Email service is temporarily unavailable. Please try again in a moment.";
+  }
   const detail = error?.response?.data;
   if (!detail) return error?.message || "Something went wrong. Please try again.";
   if (typeof detail === "string") return detail;
