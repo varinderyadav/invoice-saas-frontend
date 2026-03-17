@@ -291,6 +291,10 @@ export default function Invoices() {
   };
 
   const handleDelete = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this data?");
+    if (!confirmed) {
+      return;
+    }
     try {
       setDeletingId(id);
       setError("");

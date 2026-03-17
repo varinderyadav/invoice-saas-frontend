@@ -161,6 +161,12 @@ export default function Clients() {
   };
 
   const handleDelete = async (clientId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this data?\n\nInvoices related to this client will also be deleted."
+    );
+    if (!confirmed) {
+      return;
+    }
     try {
       setDeletingId(clientId);
       setError("");

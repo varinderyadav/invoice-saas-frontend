@@ -79,6 +79,12 @@ export default function Companies() {
   };
 
   const handleDelete = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this data?\n\nAfter deleting this company, its invoices and clients will also be deleted."
+    );
+    if (!confirmed) {
+      return;
+    }
     try {
       await deleteCompany(id);
       setCompanies((prev) => prev.filter((company) => company.id !== id));
