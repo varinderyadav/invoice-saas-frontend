@@ -74,3 +74,13 @@ export async function sendInvoiceEmail(invoiceId) {
   const response = await api.post(`invoices/${invoiceId}/send-email/`);
   return response.data;
 }
+
+export async function createInvoicePayment(invoiceId, data) {
+  const response = await api.post(`invoices/${invoiceId}/payments/`, data);
+  return response.data;
+}
+
+export async function getInvoicePayments(invoiceId) {
+  const response = await api.get(`invoices/${invoiceId}/payments/`);
+  return response.data;
+}

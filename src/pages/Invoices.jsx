@@ -9,6 +9,8 @@ import {
   deleteInvoiceItem,
   downloadInvoicePdf,
   sendInvoiceEmail,
+  createInvoicePayment,
+  getInvoicePayments,
   getInvoiceById,
   getInvoices,
 } from "../api/invoiceService";
@@ -165,6 +167,9 @@ export default function Invoices() {
   const [successMessage, setSuccessMessage] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [paymentSubmitting, setPaymentSubmitting] = useState(false);
+  const [paymentsLoading, setPaymentsLoading] = useState(false);
+  const [payments, setPayments] = useState([]);
 
   const [formData, setFormData] = useState({
     client: "",
@@ -180,6 +185,11 @@ export default function Invoices() {
     quantity: "1",
     unit_price: "",
     gst_percentage: "",
+  });
+
+  const [paymentFormData, setPaymentFormData] = useState({
+    amount: "",
+    payment_method: "cash",
   });
 
   const loadData = async () => {
@@ -224,10 +234,14 @@ export default function Invoices() {
       setInvoices((prev) =>
         prev.map((invoice) => (invoice.id === invoiceDetail.id ? { ...invoice, ...invoiceDetail } : invoice))
       );
+      setPaymentsLoading(true);
+      const paymentList = await getInvoicePayments(invoiceId);
+      setPayments(normalizeList(paymentList));
     } catch (err) {
       setError(formatError(err));
     } finally {
       setItemsLoading(false);
+      setPaymentsLoading(false);
     }
   };
 
@@ -261,6 +275,7 @@ export default function Invoices() {
     setSelectedInvoiceId(null);
     setSelectedInvoice(null);
     setInvoiceItems([]);
+    setPayments([]);
   };
 
   const closeItemModal = () => {
@@ -272,6 +287,11 @@ export default function Invoices() {
       unit_price: "",
       gst_percentage: "",
     });
+  };
+
+  const handlePaymentInputChange = (event) => {
+    const { name, value } = event.target;
+    setPaymentFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCreate = async (event) => {
@@ -448,6 +468,34 @@ ${invoiceLink}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleAddPayment = async (event) => {
+    event.preventDefault();
+    if (!selectedInvoiceId) return;
+
+    const amountValue = toNumber(paymentFormData.amount);
+    if (!amountValue || amountValue <= 0) {
+      setError("Payment amount must be greater than 0.");
+      return;
+    }
+
+    try {
+      setPaymentSubmitting(true);
+      setError("");
+      setSuccessMessage("");
+      const response = await createInvoicePayment(selectedInvoiceId, {
+        amount: amountValue,
+        payment_method: paymentFormData.payment_method,
+      });
+      setSuccessMessage(response?.message || "Payment recorded successfully.");
+      setPaymentFormData({ amount: "", payment_method: "cash" });
+      await loadInvoiceDetails(selectedInvoiceId);
+    } catch (err) {
+      setError(formatError(err));
+    } finally {
+      setPaymentSubmitting(false);
+    }
+  };
+
   const invoiceTotals = useMemo(() => {
     const subtotalAmount = selectedInvoice?.item_subtotal_amount ?? 0;
     const subtotalGst = selectedInvoice?.item_subtotal_gst ?? 0;
@@ -458,6 +506,14 @@ ${invoiceLink}`;
       subtotalGst,
       total,
     };
+  }, [selectedInvoice]);
+
+  const paymentSummary = useMemo(() => {
+    const total = selectedInvoice?.item_total ?? 0;
+    const paid = selectedInvoice?.total_paid_amount ?? 0;
+    const remaining = selectedInvoice?.remaining_amount ?? (total - paid);
+    const paymentStatus = selectedInvoice?.payment_status || "pending";
+    return { total, paid, remaining, paymentStatus };
   }, [selectedInvoice]);
 
   const statusFilter = useMemo(() => {
@@ -749,6 +805,21 @@ ${invoiceLink}`;
               </div>
             </div>
 
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Total Paid</p>
+                <p className="mt-1 text-base font-semibold text-slate-900">{formatCurrency(paymentSummary.paid)}</p>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Remaining</p>
+                <p className="mt-1 text-base font-semibold text-slate-900">{formatCurrency(paymentSummary.remaining)}</p>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Payment Status</p>
+                <p className="mt-1 text-base font-semibold text-slate-900 capitalize">{paymentSummary.paymentStatus.replace("_", " ")}</p>
+              </div>
+            </div>
+
             <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Item Details</p>
               {itemsLoading ? (
@@ -811,6 +882,79 @@ ${invoiceLink}`;
                   Add Item
                 </button>
               </div>
+            </div>
+
+            <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-base font-semibold text-slate-900">Record Payment</h3>
+                <span className="text-xs font-medium text-slate-500">
+                  Remaining: {formatCurrency(paymentSummary.remaining)}
+                </span>
+              </div>
+              <form onSubmit={handleAddPayment} className="mt-3 grid gap-3 sm:grid-cols-3">
+                <input
+                  name="amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={paymentFormData.amount}
+                  onChange={handlePaymentInputChange}
+                  placeholder="Amount"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-400"
+                  required
+                />
+                <select
+                  name="payment_method"
+                  value={paymentFormData.payment_method}
+                  onChange={handlePaymentInputChange}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-400"
+                >
+                  <option value="cash">Cash</option>
+                  <option value="online">Online</option>
+                </select>
+                <button
+                  type="submit"
+                  disabled={paymentSubmitting}
+                  className="btn btn-primary disabled:opacity-60"
+                >
+                  {paymentSubmitting ? "Saving..." : "Add Payment"}
+                </button>
+              </form>
+            </div>
+
+            <div className="mt-4 table-wrap">
+              <table className="min-w-full divide-y divide-slate-200 text-left">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Date</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Method</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Amount</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {paymentsLoading ? (
+                    <tr>
+                      <td colSpan={3} className="px-4 py-6 text-sm text-slate-500">
+                        Loading payments...
+                      </td>
+                    </tr>
+                  ) : payments.length === 0 ? (
+                    <tr>
+                      <td colSpan={3} className="px-4 py-6 text-sm text-slate-500">
+                        No payments recorded yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    payments.map((payment) => (
+                      <tr key={payment.id}>
+                        <td className="px-4 py-3 text-sm text-slate-700">{formatDate(payment.created_at)}</td>
+                        <td className="px-4 py-3 text-sm text-slate-700 capitalize">{payment.payment_method}</td>
+                        <td className="px-4 py-3 text-sm text-slate-700">{formatCurrency(payment.amount)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
 
             <div className="mt-3 table-wrap">
