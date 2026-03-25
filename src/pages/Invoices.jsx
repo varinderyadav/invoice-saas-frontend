@@ -511,7 +511,10 @@ ${invoiceLink}`;
   const paymentSummary = useMemo(() => {
     const total = selectedInvoice?.item_total ?? 0;
     const paid = selectedInvoice?.total_paid_amount ?? 0;
-    const remaining = selectedInvoice?.remaining_amount ?? (total - paid);
+    const remaining =
+      selectedInvoice?.remaining_amount !== undefined
+        ? selectedInvoice.remaining_amount
+        : total - paid;
     const paymentStatus = selectedInvoice?.payment_status || "pending";
     return { total, paid, remaining, paymentStatus };
   }, [selectedInvoice]);
