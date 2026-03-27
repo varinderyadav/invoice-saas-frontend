@@ -170,6 +170,7 @@ export default function Invoices() {
   const [paymentSubmitting, setPaymentSubmitting] = useState(false);
   const [paymentsLoading, setPaymentsLoading] = useState(false);
   const [payments, setPayments] = useState([]);
+  const [paymentError, setPaymentError] = useState("");
 
   const [formData, setFormData] = useState({
     client: "",
@@ -474,13 +475,14 @@ ${invoiceLink}`;
 
     const amountValue = toNumber(paymentFormData.amount);
     if (!amountValue || amountValue <= 0) {
-      setError("Payment amount must be greater than 0.");
+      setPaymentError("Payment amount must be greater than 0.");
       return;
     }
 
     try {
       setPaymentSubmitting(true);
       setError("");
+      setPaymentError("");
       setSuccessMessage("");
       const response = await createInvoicePayment(selectedInvoiceId, {
         amount: amountValue,
@@ -490,7 +492,7 @@ ${invoiceLink}`;
       setPaymentFormData({ amount: "", payment_method: "cash" });
       await loadInvoiceDetails(selectedInvoiceId);
     } catch (err) {
-      setError(formatError(err));
+      setPaymentError(formatError(err));
     } finally {
       setPaymentSubmitting(false);
     }
@@ -894,6 +896,9 @@ ${invoiceLink}`;
                   Remaining: {formatCurrency(paymentSummary.remaining)}
                 </span>
               </div>
+              {paymentError ? (
+                <p className="mt-2 text-sm text-rose-600">{paymentError}</p>
+              ) : null}
               <form onSubmit={handleAddPayment} className="mt-3 grid gap-3 sm:grid-cols-3">
                 <input
                   name="amount"
