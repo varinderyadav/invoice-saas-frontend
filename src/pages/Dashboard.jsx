@@ -85,8 +85,8 @@ export default function Dashboard() {
   }, []);
 
   const stats = useMemo(() => {
-    const paidCount = invoices.filter((invoice) => invoice?.status === "paid").length;
-    const pendingCount = invoices.filter((invoice) => invoice?.status === "due").length;
+    const paidCount = invoices.filter((invoice) => Number(invoice?.remaining_amount ?? 0) === 0).length;
+    const pendingCount = invoices.length - paidCount;
 
     return {
       totalCompanies: companies.length,
