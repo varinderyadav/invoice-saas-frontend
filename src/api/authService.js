@@ -38,11 +38,17 @@ export async function login(username, password) {
   try {
     const response = await api.post("auth/login/", { username, password });
     persistTokens(response.data);
+    if (username) {
+      localStorage.setItem("authUserLabel", username);
+    }
     return { success: true, data: response.data };
   } catch (primaryError) {
     try {
       const fallbackResponse = await api.post("token/", { username, password });
       persistTokens(fallbackResponse.data);
+      if (username) {
+        localStorage.setItem("authUserLabel", username);
+      }
       return { success: true, data: fallbackResponse.data };
     } catch (fallbackError) {
       return { success: false, message: extractErrorMessage(fallbackError || primaryError) };

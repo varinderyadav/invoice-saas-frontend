@@ -30,7 +30,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const token = readAccessToken();
     const payload = token && parseJwt(token);
-    return payload ? { username: payload.username } : null;
+    const storedLabel = localStorage.getItem("authUserLabel");
+    return payload?.username ? { username: payload.username } : storedLabel ? { username: storedLabel } : null;
   });
 
   const isAuthenticated = Boolean(accessToken);
@@ -52,8 +53,11 @@ export function AuthProvider({ children }) {
       setRefreshToken(refresh);
 
       const payload = access && parseJwt(access);
-      if (payload) {
+      const storedLabel = localStorage.getItem("authUserLabel");
+      if (payload?.username) {
         setUser({ username: payload.username });
+      } else if (storedLabel) {
+        setUser({ username: storedLabel });
       }
       return { success: true };
     } catch (error) {
@@ -67,6 +71,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("access");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("refresh");
+    localStorage.removeItem("authUserLabel");
     setAccessToken(null);
     setRefreshToken(null);
     setUser(null);
@@ -89,8 +94,11 @@ export function AuthProvider({ children }) {
       setAccessToken(access);
       setRefreshToken(refresh);
       const payload = parseJwt(access);
-      if (payload) {
+      const storedLabel = localStorage.getItem("authUserLabel");
+      if (payload?.username) {
         setUser({ username: payload.username });
+      } else if (storedLabel) {
+        setUser({ username: storedLabel });
       }
     };
 
