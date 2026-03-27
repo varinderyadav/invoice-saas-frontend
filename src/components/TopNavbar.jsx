@@ -68,7 +68,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
             </Link>
 
             {user?.username ? (
-              <span className="hidden text-sm font-medium text-slate-500 sm:inline">
+              <span className="text-sm font-semibold text-slate-700">
                 {user.username}
               </span>
             ) : null}
