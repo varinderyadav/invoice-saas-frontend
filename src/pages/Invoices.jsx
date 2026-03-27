@@ -39,6 +39,10 @@ function formatCurrency(value) {
 }
 
 function formatAmount(invoice) {
+  const remaining = invoice?.remaining_amount;
+  if (remaining !== undefined && remaining !== null) {
+    return formatCurrency(remaining);
+  }
   return formatCurrency(invoice?.item_total ?? 0);
 }
 
@@ -620,8 +624,8 @@ ${invoiceLink}`;
                   <td className="px-4 py-3 text-sm text-slate-700">{invoice.company_name || invoice.company || "-"}</td>
                   <td className="px-4 py-3 text-sm text-slate-700">{formatAmount(invoice)}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium capitalize text-slate-700">
-                      {invoice.status || "-"}
+                    <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                      {toNumber(invoice?.remaining_amount ?? 0) === 0 ? "Paid" : "Due"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-700">{formatDate(invoice.invoice_date || invoice.date)}</td>
