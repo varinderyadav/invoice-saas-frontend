@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="mx-auto mt-8 max-w-2xl space-y-6">
       <div className="rounded-lg bg-blue-50 p-2 text-center text-sm text-blue-700">
-        Note: Please register first, then login with Same Email to explore the full features of this Invoice SaaS application.
+        Note:Please register first, then login with Same Email to explore the full features of Invoice SaaS application.
       </div>
       <section className="app-card p-6">
         <h1 className="text-2xl font-semibold text-slate-900">Invoice SaaS – Billing Management System</h1>
