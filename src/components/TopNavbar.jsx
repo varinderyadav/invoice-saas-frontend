@@ -38,7 +38,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </button>
         ) : null}
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
             <Link
               to={isAuthenticated ? "/dashboard" : "/login"}
               className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700"
@@ -46,7 +46,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
               <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
               <span>Invoice SaaS</span>
             </Link>
-            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 whitespace-nowrap">
               Developed by Varinder Yadav
             </span>
             {isAuthenticated ? (
@@ -68,7 +68,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
             </Link>
 
             {user?.username ? (
-              <span className="text-xs font-semibold text-slate-700 sm:text-sm">
+              <span className="max-w-[140px] truncate text-xs font-semibold text-slate-700 sm:max-w-none sm:text-sm">
                 {user.username}
               </span>
             ) : null}
