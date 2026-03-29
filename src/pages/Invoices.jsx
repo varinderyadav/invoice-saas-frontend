@@ -532,13 +532,13 @@ ${invoiceLink}`;
 
   const filteredInvoices = useMemo(() => {
     if (!statusFilter) return invoices;
-    if (statusFilter === "paid") {
-      return invoices.filter((invoice) => (invoice?.status || "").toLowerCase() === "paid");
+    if (statusFilter === "paid" || statusFilter === "paidbalance") {
+      return invoices.filter((invoice) => toNumber(invoice?.remaining_amount ?? 0) === 0);
     }
     if (statusFilter === "due" || statusFilter === "pending") {
       return invoices.filter((invoice) => {
-        const status = (invoice?.status || "").toLowerCase();
-        return status === "due" || status === "pending";
+        const remaining = toNumber(invoice?.remaining_amount ?? 0);
+        return remaining > 0;
       });
     }
     return invoices.filter((invoice) => (invoice?.status || "").toLowerCase() === statusFilter);
@@ -546,7 +546,7 @@ ${invoiceLink}`;
 
   const filterLabel = useMemo(() => {
     if (!statusFilter) return "";
-    if (statusFilter === "paid") return "Paid";
+    if (statusFilter === "paid" || statusFilter === "paidbalance") return "Paid";
     if (statusFilter === "due" || statusFilter === "pending") return "Pending";
     return statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1);
   }, [statusFilter]);

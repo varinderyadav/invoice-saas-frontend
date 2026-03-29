@@ -157,7 +157,7 @@ export default function Dashboard() {
           title="Paid Invoices"
           value={stats.paidInvoices}
           tone="bg-emerald-50 text-emerald-600"
-          to="/invoices?status=paid"
+          to="/invoices?status=paidbalance"
           icon={
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="m5 13 4 4L19 7" />
