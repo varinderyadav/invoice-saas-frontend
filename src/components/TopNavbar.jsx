@@ -38,15 +38,15 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </button>
         ) : null}
 
-          <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
+          <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:flex-nowrap">
             <Link
               to={isAuthenticated ? "/dashboard" : "/login"}
-              className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700"
+              className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700 sm:whitespace-nowrap"
             >
               <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
               <span>Invoice SaaS</span>
             </Link>
-            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 whitespace-nowrap">
+            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 whitespace-nowrap sm:inline-flex">
               Developed by Varinder Yadav
             </span>
             {isAuthenticated ? (
