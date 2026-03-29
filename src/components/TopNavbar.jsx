@@ -46,7 +46,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
               <img src="/logo.svg" alt="Invoice SaaS" className="h-8 w-8" />
               <span>Invoice SaaS</span>
             </Link>
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
               Developed by Varinder Yadav
             </span>
             {isAuthenticated ? (
