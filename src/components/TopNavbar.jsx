@@ -57,7 +57,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </div>
         </div>
 
-        <nav className="flex items-center gap-3 sm:gap-4">
+        <nav className="flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-4">
         {isAuthenticated ? (
           <>
             <Link
@@ -68,7 +68,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
             </Link>
 
             {user?.username ? (
-              <span className="text-sm font-semibold text-slate-700">
+              <span className="text-xs font-semibold text-slate-700 sm:text-sm">
                 {user.username}
               </span>
             ) : null}
