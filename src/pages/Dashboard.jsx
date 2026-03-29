@@ -84,6 +84,21 @@ export default function Dashboard() {
     };
   }, []);
 
+  const handleRetry = () => {
+    setLoading(true);
+    setError("");
+    Promise.all([getCompanies(), getInvoices(), getClients()])
+      .then(([companiesRes, invoicesRes, clientsRes]) => {
+        setCompanies(normalizeList(companiesRes));
+        setInvoices(normalizeList(invoicesRes));
+        setClients(normalizeList(clientsRes));
+      })
+      .catch((err) => {
+        setError(err?.response?.data?.detail || "Failed to load dashboard statistics.");
+      })
+      .finally(() => setLoading(false));
+  };
+
   const stats = useMemo(() => {
     const paidCount = invoices.filter((invoice) => Number(invoice?.remaining_amount ?? 0) === 0).length;
     const pendingCount = invoices.length - paidCount;
@@ -102,7 +117,18 @@ export default function Dashboard() {
   }
 
   if (error) {
-    return <p className="text-sm text-rose-600">{error}</p>;
+    return (
+      <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
+        <p className="text-sm font-medium text-rose-700">{error}</p>
+        <button
+          type="button"
+          onClick={handleRetry}
+          className="mt-3 inline-flex items-center rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
