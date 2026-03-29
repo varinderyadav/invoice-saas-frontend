@@ -38,7 +38,7 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </button>
         ) : null}
 
-          <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to={isAuthenticated ? "/dashboard" : "/login"}
               className="flex items-center gap-2 text-base font-semibold text-slate-900 hover:text-slate-700"
