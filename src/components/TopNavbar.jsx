@@ -83,12 +83,14 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
           </>
         ) : (
           <>
-            <Link
-              to="/project"
-              className="btn btn-outline"
-            >
-              Project Overview
-            </Link>
+            {location.pathname !== "/project" ? (
+              <Link
+                to="/project"
+                className="btn btn-outline"
+              >
+                Project Overview
+              </Link>
+            ) : null}
             <Link
               to="/login"
               className="btn btn-outline"
