@@ -84,6 +84,12 @@ export default function TopNavbar({ showMenuButton = false, onMenuClick }) {
         ) : (
           <>
             <Link
+              to="/project"
+              className="btn btn-outline"
+            >
+              Project Overview
+            </Link>
+            <Link
               to="/login"
               className="btn btn-outline"
             >
