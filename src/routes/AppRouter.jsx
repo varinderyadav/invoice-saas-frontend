@@ -3,6 +3,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import ProjectOverview from "../pages/ProjectOverview";
 import Dashboard from "../pages/Dashboard";
 import Companies from "../pages/Companies";
 import Invoices from "../pages/Invoices";
@@ -24,6 +25,7 @@ export default function AppRouter() {
           path="/register"
           element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />}
         />
+        <Route path="/project" element={<ProjectOverview />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>
