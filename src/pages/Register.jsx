@@ -76,7 +76,16 @@ export default function Register() {
   };
 
   return (
-    <div className="mx-auto mt-12 max-w-md app-card p-6">
+    <div className="mx-auto mt-8 max-w-md space-y-6">
+      <div className="flex justify-center">
+        <Link to="/project" className="btn btn-primary">
+          RUN THE PROJECT
+        </Link>
+      </div>
+      <p className="text-center text-xs text-slate-600">
+        If You Are A Recruiter Click On The Button To Explore The Project
+      </p>
+      <div className="app-card p-6">
       <div className="flex items-center gap-3">
         <img src="/logo.svg" alt="Invoice SaaS" className="h-10 w-10" />
         <div>
@@ -199,6 +208,7 @@ export default function Register() {
           Login
         </Link>
       </p>
+      </div>
     </div>
   );
 }

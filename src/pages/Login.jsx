@@ -35,6 +35,14 @@ export default function Login() {
 
   return (
     <div className="mx-auto mt-8 max-w-2xl space-y-6">
+      <div className="flex justify-center">
+        <Link to="/project" className="btn btn-primary">
+          RUN THE PROJECT
+        </Link>
+      </div>
+      <p className="text-center text-xs text-slate-600">
+        If You Are A Recruiter Click On The Button To Explore The Project
+      </p>
       <div className="rounded-lg bg-blue-50 p-2 text-center text-sm text-blue-700">
         Note:Please register first, then login with Same Email to explore the full features of Invoice SaaS application.
       </div>
