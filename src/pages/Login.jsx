@@ -41,7 +41,7 @@ export default function Login() {
         </Link>
       </div>
       <p className="text-center text-lg font-semibold text-emerald-700">
-        If You Are A Recruiter Click On The Button To Explore The Project No Need To Register Or Login
+        If You Are A Recruiter Click On The Button ☝️ To Explore The Project No Need To Register Or Login
       </p>
       <div className="rounded-lg bg-blue-50 p-2 text-center text-sm text-blue-700">
         Note:Please register first, then login with Same Email to explore the full features of Invoice SaaS application.
