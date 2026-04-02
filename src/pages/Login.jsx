@@ -40,7 +40,7 @@ export default function Login() {
           RUN THE PROJECT
         </Link>
       </div>
-      <p className="text-center text-xs text-slate-600">
+      <p className="text-center text-sm font-semibold text-emerald-700">
         If You Are A Recruiter Click On The Button To Explore The Project
       </p>
       <div className="rounded-lg bg-blue-50 p-2 text-center text-sm text-blue-700">
